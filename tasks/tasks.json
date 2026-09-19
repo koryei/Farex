@@ -1,0 +1,64 @@
+{
+  "tasks": [
+    {
+      "id": "coding_1",
+      "type": "coding",
+      "prompt": "Write a Python function to reverse a string. Return only the function.",
+      "correct_answer": "def reverse_string(s):\n    return s[::-1]"
+    },
+    {
+      "id": "coding_2",
+      "type": "coding",
+      "prompt": "Write a Python function to find the max in a list. Return only the function.",
+      "correct_answer": "def find_max(lst):\n    return max(lst)"
+    },
+    {
+      "id": "math_1",
+      "type": "math",
+      "prompt": "What is 17 * 23? Return only the number.",
+      "correct_answer": "391"
+    },
+    {
+      "id": "math_2",
+      "type": "math",
+      "prompt": "What is 144 / 12? Return only the number.",
+      "correct_answer": "12"
+    },
+    {
+      "id": "extraction_1",
+      "type": "extraction",
+      "prompt": "From this text: 'The meeting is on December 25th at 3pm in New York', extract the date.",
+      "correct_answer": "December 25th"
+    },
+    {
+      "id": "extraction_2",
+      "type": "extraction",
+      "prompt": "From this text: 'Dr. Smith works at Stanford University', extract the organization.",
+      "correct_answer": "Stanford University"
+    },
+    {
+      "id": "evidence_qa_1",
+      "type": "evidence_qa",
+      "prompt": "Claim: 'Cats are mammals'. Text: 'Cats are carnivorous animals with fur, and all mammals have fur and produce milk.' Answer yes/no and cite one phrase.",
+      "correct_answer": "yes: all mammals have fur"
+    },
+    {
+      "id": "evidence_qa_2",
+      "type": "evidence_qa",
+      "prompt": "Claim: 'It rains every day in Seattle'. Text: 'Seattle has 152 rainy days per year, which is less than many other US cities.' Answer yes/no and cite one phrase.",
+      "correct_answer": "no: less than many other US cities"
+    },
+    {
+      "id": "coding_3",
+      "type": "coding",
+      "prompt": "Write a Python function to check if a string is a palindrome. Return only the function.",
+      "correct_answer": "def is_palindrome(s):\n    return s == s[::-1]"
+    },
+    {
+      "id": "math_3",
+      "type": "math",
+      "prompt": "What is 99 + 101? Return only the number.",
+      "correct_answer": "200"
+    }
+  ]
+}
