@@ -3,3 +3,8 @@ __pycache__/
 .env
 .DS_Store
 *.log.tmp
+.env.*
+!.env.example
+# Protect local secrets / API keys from public push
+logs/
+*.jsonl
