@@ -1,0 +1,107 @@
+{
+  "description": "Clinical routing benchmark: 16 text queries built from sample clinical scenarios, 4 per agent. Used to study what happens when a multi-agent system sends tasks to the wrong agent.",
+  "agents": [
+    "symptom_triage",
+    "drug_interaction_checker",
+    "medical_literature_search",
+    "general_code_math"
+  ],
+  "tasks": [
+    {
+      "id": "symptom_triage_1",
+      "type": "symptom_triage",
+      "prompt": "A 58-year-old man reports sudden crushing chest pain radiating to his left arm, sweating, and shortness of breath that started 20 minutes ago. Classify the urgency as emergency, urgent, or routine and state the recommended action.",
+      "correct_answer": "emergency: call emergency services now; possible myocardial infarction"
+    },
+    {
+      "id": "symptom_triage_2",
+      "type": "symptom_triage",
+      "prompt": "A 6-year-old has had a runny nose and mild sore throat for 2 days, is drinking fluids, playing normally, and has no fever. Classify the urgency as emergency, urgent, or routine and state the recommended action.",
+      "correct_answer": "routine: home care with fluids and rest; contact pediatrician if symptoms worsen"
+    },
+    {
+      "id": "symptom_triage_3",
+      "type": "symptom_triage",
+      "prompt": "A 24-year-old woman presents with sudden one-sided weakness and slurred speech that began 30 minutes ago. Classify the urgency as emergency, urgent, or routine and state the recommended action.",
+      "correct_answer": "emergency: call emergency services now; activate stroke pathway and urgent imaging"
+    },
+    {
+      "id": "symptom_triage_4",
+      "type": "symptom_triage",
+      "prompt": "A 35-year-old reports 3 days of mild low-back pain after helping a friend move, with no leg numbness, no bladder or bowel changes, and no fever. Classify the urgency as emergency, urgent, or routine and state the recommended action.",
+      "correct_answer": "routine: conservative care with over-the-counter analgesia and return precautions"
+    },
+    {
+      "id": "drug_interaction_checker_1",
+      "type": "drug_interaction_checker",
+      "prompt": "Patient is currently taking Warfarin and was prescribed Amoxicillin. Check for potential adverse interactions.",
+      "correct_answer": "significant interaction: amoxicillin can potentiate warfarin and raise INR and bleeding risk; monitor INR closely"
+    },
+    {
+      "id": "drug_interaction_checker_2",
+      "type": "drug_interaction_checker",
+      "prompt": "Patient takes lisinopril daily plus over-the-counter potassium chloride supplements. Check for potential adverse interactions.",
+      "correct_answer": "significant interaction: ACE inhibitor with potassium supplementation can cause hyperkalemia; monitor serum potassium"
+    },
+    {
+      "id": "drug_interaction_checker_3",
+      "type": "drug_interaction_checker",
+      "prompt": "Patient uses sublingual nitroglycerin as needed for angina and was recently started on sildenafil. Check for potential adverse interactions.",
+      "correct_answer": "contraindicated combination: nitrates with sildenafil can cause severe hypotension; do not combine"
+    },
+    {
+      "id": "drug_interaction_checker_4",
+      "type": "drug_interaction_checker",
+      "prompt": "Patient takes metformin for type 2 diabetes and is scheduled for a contrast-enhanced CT scan. Check for potential adverse risks with this combination.",
+      "correct_answer": "risk: iodinated contrast with metformin can cause lactic acidosis in renal impairment; hold metformin per protocol"
+    },
+    {
+      "id": "medical_literature_search_1",
+      "type": "medical_literature_search",
+      "prompt": "Find recent studies on whether daily aspirin is still recommended for primary prevention of cardiovascular disease in adults over 60.",
+      "correct_answer": "current guidance recommends against initiating low-dose aspirin for primary prevention in adults over 60"
+    },
+    {
+      "id": "medical_literature_search_2",
+      "type": "medical_literature_search",
+      "prompt": "Search the literature for randomized controlled trials comparing continuous positive airway pressure with mandibular advancement devices for obstructive sleep apnea.",
+      "correct_answer": "trials show CPAP is more effective at reducing the apnea-hypopnea index, with similar or better adherence for oral appliances"
+    },
+    {
+      "id": "medical_literature_search_3",
+      "type": "medical_literature_search",
+      "prompt": "What does the published evidence say about the effect of the mediterranean diet on cardiovascular events in high-risk adults?",
+      "correct_answer": "the predimed trial found a mediterranean diet with olive oil or nuts reduced major cardiovascular events"
+    },
+    {
+      "id": "medical_literature_search_4",
+      "type": "medical_literature_search",
+      "prompt": "Find meta-analyses on the diagnostic accuracy of the rapid antigen test compared with RT-PCR for detecting influenza in symptomatic adults.",
+      "correct_answer": "rapid influenza antigen tests show moderate sensitivity around 50 to 70 percent with high specificity near 99 percent"
+    },
+    {
+      "id": "general_code_math_1",
+      "type": "general_code_math",
+      "prompt": "A patient's measured creatinine is 1.2 mg/dL, age 55, weight 70 kg, male. Compute the creatinine clearance using the Cockcroft-Gault equation. Return only the numeric result in mL/min rounded to one decimal.",
+      "correct_answer": "68.9"
+    },
+    {
+      "id": "general_code_math_2",
+      "type": "general_code_math",
+      "prompt": "Convert a patient weight of 154 pounds to kilograms. Return only the numeric result rounded to one decimal.",
+      "correct_answer": "69.9"
+    },
+    {
+      "id": "general_code_math_3",
+      "type": "general_code_math",
+      "prompt": "Write a Python function that takes a list of lab values and returns only the values outside the range 3.5 to 5.0. Return only the function.",
+      "correct_answer": "def abnormal_labs(values):\n    return [v for v in values if v < 3.5 or v > 5.0]"
+    },
+    {
+      "id": "general_code_math_4",
+      "type": "general_code_math",
+      "prompt": "Write a Python function that takes a date of birth string 'YYYY-MM-DD' and today's date, and returns the patient's age in whole years. Return only the function.",
+      "correct_answer": "def age_years(dob, today):\n    y, m, d = map(int, dob.split('-'))\n    ty, tm, td = map(int, today.split('-'))\n    return ty - y - ((tm, td) < (m, d))"
+    }
+  ]
+}
