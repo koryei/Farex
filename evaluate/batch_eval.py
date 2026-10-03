@@ -1,5 +1,9 @@
 """Run the 16-query clinical matrix against one or more local Ollama models.
 
+Models are processed strictly sequentially: every task for one model completes
+before the next model is touched, so only one request is ever in flight and
+local memory pressure stays bounded even with large models loaded.
+
 Normal run::
 
     python evaluate/batch_eval.py --models llama3:8b mistral:7b
