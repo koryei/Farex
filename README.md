@@ -39,12 +39,14 @@ What I measure ->
 - Task success (did the answer match?)
 - Tokens used
 - Time (latency)
+- Estimated token/cost waste (batch mode; simulated baseline rates, not billed)
 
 Files ->
 - /tasks/ : the 10-50 test questions
 - /agents/ : the agent prompts
 - /logs/ : every run saves a JSON file
 - /evaluate/ : my counting script
+- /results/ : multi-model batch telemetry (JSONL), run summary, and comparison figure
 
 Clinical scenario set (added) ->
 Alongside the generic set there is a clinical routing benchmark with four sub-agent destinations declared in `evaluate/clinical_agents.py`:
@@ -80,9 +82,26 @@ Filter the dashboard to a model, or choose specific input log files and an outpu
 
 The dashboard reads actual run records, deduplicates the cumulative/per-run copies, and scores older clinical logs that predate the `score` field. Install the plotting libraries if needed with `python -m pip install matplotlib numpy`.
 
+Two-model batch comparison (batch_eval.py) ->
+To compare local models head-to-head, `evaluate/batch_eval.py` runs the 16-query clinical matrix against each model. Models are processed strictly sequentially (all 16 tasks for one model finish before the next model starts), so only one request is in flight and local memory stays bounded with large models loaded. Each cell is scored by `ClinicalEvaluator` inside the run loop and appended immediately (flush + fsync per row) to `results/evaluation_run.jsonl`, so completed rows survive a mid-run crash. Rows record the timestamp, model, task id/type, latency, raw response, and estimated token/cost/waste telemetry (simulated baseline rates, clearly marked not billed). A `--dry-run` writes the full telemetry matrix without contacting Ollama.
+
+Run it ->
+`python evaluate/batch_eval.py --models llama3:8b mistral:7b`
+`python evaluate/batch_eval.py --dry-run`
+`python evaluate/plot_batch_comparison.py` (four-panel figure: accuracy by domain, mean latency, per-task scatter, per-task score matrix)
+
+First real run (2026-10-03) ->
+Both models completed all 16 cells with zero request errors and tied at 75% overall (12/16), but the tie hides a clean domain split:
+- Symptom triage, drug interaction check, medical literature search: 12/12 prose tasks correct for BOTH models (100%)
+- Clinical math/code: 0/4 for BOTH models (0%)
+- llama3:8b reproduced the reference hallucination live: printed `0.9` where `68.9` was expected (Cockcroft-Gault); mistral:7b printed `108.8` plus unwanted prose
+- 2 of llama3:8b's 4 math/code failures are functionally plausible code that only fails the strict AST structural match - a scoring-strictness caveat when reading the 0%
+
+Full write-up with tables and the comparison figure: `results/batch_summary.md` (+ `results/batch_model_comparison.png`). Takeaway for the routing conditions: local 7-8B models are reliable clinical prose answerers but unreliable calculators - exactly what the local-router + escalation condition should exploit. (Results narrative drafted with AI assistance; see the disclaimer in `results/batch_summary.md`.)
+
 The selected provider is configured with `CLINICAL_PROVIDER` or `AGENT_PROVIDER` (`ollama`, `openrouter`, or `requesty`). Set its model (`CLINICAL_MODEL`, `AGENT_MODEL`, or provider-specific model variable) and, for hosted providers, its API key in `.env`. Configure provider URLs with `OLLAMA_BASE_URL`, `OPENROUTER_BASE_URL`, and `REQUESTY_BASE_URL`; shared `AGENT_TEMPERATURE` and `AGENT_TIMEOUT` also apply. The existing `.env.example` contains the complete setting list. Results are append-only JSONL, one result per line, and each invocation's rows share a generated `run_id` for easy filtering.
 
-Structure: `evaluate/clinical_agents.py` owns the clinical destination registry and task schema validation; runtime loads the same schema without enforcing the canonical benchmark's 4-per-destination balance. `evaluate/clinical_benchmark.py` owns immutable resolved `ClinicalRunConfig`, task selection, provider dispatch, latency/error capture, and JSONL writes. `evaluate/run_clinical.py` owns CLI parsing and terminal presentation, consuming one logged result at a time from the engine. Data flows CLI/environment → resolved config → schema-valid tasks/prompts → existing provider API → appended JSONL result → CLI output. `evaluate/evaluate.py` remains the owner of `.env` loading and provider transport.
+Structure: `evaluate/clinical_agents.py` owns the clinical destination registry and task schema validation; runtime loads the same schema without enforcing the canonical benchmark's 4-per-destination balance. `evaluate/clinical_benchmark.py` owns immutable resolved `ClinicalRunConfig`, task selection, provider dispatch, latency/error capture, and JSONL writes. `evaluate/run_clinical.py` owns CLI parsing and terminal presentation, consuming one logged result at a time from the engine. Data flows CLI/environment → resolved config → schema-valid tasks/prompts → existing provider API → appended JSONL result → CLI output. `evaluate/evaluate.py` remains the owner of `.env` loading and provider transport. `evaluate/batch_eval.py` owns multi-model sequential batching with fsynced per-row telemetry, and `evaluate/plot_batch_comparison.py` renders the two-model comparison figure.
 
 Check destination wiring with:
 `python evaluate/clinical_agents.py --validate`
