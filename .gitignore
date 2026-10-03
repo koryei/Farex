@@ -8,3 +8,4 @@ __pycache__/
 # Protect local secrets / API keys from public push
 logs/
 *.jsonl
+.idea/
