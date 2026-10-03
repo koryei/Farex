@@ -16,6 +16,10 @@
 | llama3:8b | **12/16 (75.0%)** | 4.14 s | 0.31 – 11.07 s | 0 |
 | mistral:7b | **12/16 (75.0%)** | 4.40 s | 0.85 – 8.77 s | 0 |
 
+![Two-model comparison: accuracy, latency, per-task scatter, and score matrix](batch_model_comparison.png)
+
+*Figure: (a) accuracy by domain, (b) mean latency by domain, (c) per-task latency distribution, (d) per-task score matrix. Regenerate with `python evaluate/plot_batch_comparison.py`.*
+
 ## Accuracy and latency by domain
 
 | Domain | llama3:8b | mistral:7b | llama avg s | mistral avg s |
@@ -49,4 +53,9 @@ Local 7–8B models are reliable clinical prose routers/answerers but unreliable
 ```bash
 python evaluate/batch_eval.py --models llama3:8b mistral:7b   # real run
 python evaluate/batch_eval.py --dry-run                        # telemetry wiring check, no model calls
+python evaluate/plot_batch_comparison.py                       # regenerate the comparison figure
 ```
+
+---
+
+**AI-generated draft disclaimer:** This summary, its tables, and the comparison figure were produced with AI assistance (a Codebuff agent run) from the raw telemetry in `results/evaluation_run.jsonl`. It is a working draft intended to be reviewed and rewritten in the author's own words; the experiment design, task selection, and evaluation logic remain the author's own (see the license note in `README.md`).
